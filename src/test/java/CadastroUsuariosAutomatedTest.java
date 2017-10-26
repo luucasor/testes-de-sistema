@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CadastroUsuariosAutomatedTest {
@@ -27,12 +28,12 @@ public class CadastroUsuariosAutomatedTest {
         options.addArguments("headless");
         driver = new ChromeDriver(options);
         //driver = new ChromeDriver();
-        driver.get("http://localhost:8080/usuarios/new");
         //driver.manage().window().maximize();
     }
 
     @Test
     public void deveCadastrarUsuario(){
+        driver.get("http://localhost:8080/usuarios/new");
         WebElement nome = driver.findElement(By.name("usuario.nome"));
         WebElement email = driver.findElement(By.name("usuario.email"));
 
@@ -52,6 +53,7 @@ public class CadastroUsuariosAutomatedTest {
 
     @Test
     public void deveRetornarErroCadastroSemNome(){
+        driver.get("http://localhost:8080/usuarios/new");
         WebElement nome = driver.findElement(By.name("usuario.nome"));
         WebElement email = driver.findElement(By.name("usuario.email"));
 
@@ -68,6 +70,7 @@ public class CadastroUsuariosAutomatedTest {
 
     @Test
     public void deveRetornarErroCadastroSemNomeSemEmail(){
+        driver.get("http://localhost:8080/usuarios/new");
         driver.findElement(By.id("btnSalvar")).click();
 
         boolean erroNome = driver.getPageSource().contains("Nome obrigatorio!");
@@ -75,6 +78,15 @@ public class CadastroUsuariosAutomatedTest {
 
         boolean erroEmail = driver.getPageSource().contains("E-mail obrigatorio!");
         assertTrue(erroEmail);
+    }
+
+    @Test
+    public void deveVerificarSeOLinkNovoUsuarioFunciona(){
+        driver.get("http://localhost:8080/usuarios");
+        WebElement linkNovoUsuario = driver.findElement(By.linkText("Novo Usuário"));
+        linkNovoUsuario.click();
+
+        assertEquals("http://localhost:8080/usuarios/new", driver.getCurrentUrl());
     }
 
     @After
