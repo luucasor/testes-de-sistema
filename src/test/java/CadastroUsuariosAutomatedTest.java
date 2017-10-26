@@ -1,4 +1,5 @@
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -20,15 +21,18 @@ public class CadastroUsuariosAutomatedTest {
         System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
     }
 
-    @Test
-    public void deveCadastrarUsuario(){
+    @Before
+    public void setUp(){
         options = new ChromeOptions();
         options.addArguments("headless");
-
         driver = new ChromeDriver(options);
+        //driver = new ChromeDriver();
         driver.get("http://localhost:8080/usuarios/new");
         //driver.manage().window().maximize();
+    }
 
+    @Test
+    public void deveCadastrarUsuario(){
         WebElement nome = driver.findElement(By.name("usuario.nome"));
         WebElement email = driver.findElement(By.name("usuario.email"));
 
@@ -44,6 +48,22 @@ public class CadastroUsuariosAutomatedTest {
 
         assertTrue(achouNome);
         assertTrue(achouEmail);
+    }
+
+    @Test
+    public void deveRetornarErroCadastroIncompleto(){
+        WebElement nome = driver.findElement(By.name("usuario.nome"));
+        WebElement email = driver.findElement(By.name("usuario.email"));
+
+        String nomeJoao = "";
+        String emailJoao = "joaosilvapereira@gmail.com";
+        nome.sendKeys(nomeJoao);
+        email.sendKeys(emailJoao);
+
+        driver.findElement(By.id("btnSalvar")).click();
+
+        boolean erro = driver.getPageSource().contains("Nome obrigatorio!");
+        assertTrue(erro);
     }
 
     @After
