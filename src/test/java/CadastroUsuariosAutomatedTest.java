@@ -51,7 +51,7 @@ public class CadastroUsuariosAutomatedTest {
     }
 
     @Test
-    public void deveRetornarErroCadastroIncompleto(){
+    public void deveRetornarErroCadastroSemNome(){
         WebElement nome = driver.findElement(By.name("usuario.nome"));
         WebElement email = driver.findElement(By.name("usuario.email"));
 
@@ -64,6 +64,17 @@ public class CadastroUsuariosAutomatedTest {
 
         boolean erro = driver.getPageSource().contains("Nome obrigatorio!");
         assertTrue(erro);
+    }
+
+    @Test
+    public void deveRetornarErroCadastroSemNomeSemEmail(){
+        driver.findElement(By.id("btnSalvar")).click();
+
+        boolean erroNome = driver.getPageSource().contains("Nome obrigatorio!");
+        assertTrue(erroNome);
+
+        boolean erroEmail = driver.getPageSource().contains("E-mail obrigatorio!");
+        assertTrue(erroEmail);
     }
 
     @After
